@@ -5,9 +5,6 @@ export default defineNuxtConfig({
     typeCheck: true
   },
   runtimeConfig: {
-    jwtSignSecret: 'PLEASE_REPLACE_WITH_YOUR_KEY',
-    public: {
-      googleClientId: '這邊放上你的 Google Client ID'
-    }
+    jwtSignSecret: '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',
   }
 })
