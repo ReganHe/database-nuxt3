@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -6,30 +6,48 @@ export const useUserStore = defineStore('user', {
       id: null,
       provider: {
         name: null,
-        userId: null
+        userId: null,
       },
       nickname: null,
       avatar: null,
-      email: null
-    }
+      email: null,
+    },
   }),
   actions: {
     async refreshUserProfile() {
-      const { data, error } = await useFetch('/api/user/profile', { initialCache: false })
+      const { data, error } = await useFetch('/api/user/profile', {
+        initialCache: false,
+      });
       if (data.value) {
-        this.profile = data.value
+        this.profile = data.value;
       } else {
-        return error.value?.data?.message ?? '未知錯誤'
+        return error.value?.data?.message ?? '未知錯誤';
       }
-    }
+    },
+    async emailLogin(loginrData) {
+      const { data, error } = await useFetch('/api/auth/login', {
+        method: 'POST',
+        body: loginrData,
+        initialCache: false,
+      });
+
+      if (data.value) {
+        this.profile = data.value;
+      }
+
+      return {
+        data,
+        error,
+      };
+    },
   },
   persist: {
     enabled: true,
     strategies: [
       {
         key: 'user',
-        storage: process.client ? localStorage : null
-      }
-    ]
-  }
-})
+        storage: process.client ? localStorage : null,
+      },
+    ],
+  },
+});

@@ -12,38 +12,23 @@
             <div>
               <label for="email" class="block text-sm font-medium text-gray-700">電子信箱</label>
               <div class="mt-1">
-                <input
-                  id="email"
-                  v-model="loginData.email"
-                  name="email"
-                  type="email"
-                  autocomplete="email"
-                  required
-                  class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-emerald-500 sm:text-sm"
-                />
+                <input id="email" v-model="loginData.email" name="email" type="email" autocomplete="email" required
+                  class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-emerald-500 sm:text-sm" />
               </div>
             </div>
 
             <div>
               <label for="password" class="block text-sm font-medium text-gray-700">密碼</label>
               <div class="mt-1">
-                <input
-                  id="password"
-                  v-model="loginData.password"
-                  name="password"
-                  type="password"
-                  autocomplete="current-password"
-                  required
-                  class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-emerald-500 sm:text-sm"
-                />
+                <input id="password" v-model="loginData.password" name="password" type="password"
+                  autocomplete="current-password" required
+                  class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-emerald-500 sm:text-sm" />
               </div>
             </div>
 
             <div>
-              <button
-                type="submit"
-                class="flex w-full justify-center rounded-md border border-transparent bg-emerald-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
-              >
+              <button type="submit"
+                class="flex w-full justify-center rounded-md border border-transparent bg-emerald-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
                 登入
               </button>
             </div>
@@ -56,11 +41,9 @@
           </div>
 
           <div class="flex flex-col space-y-2">
-            <button
-              type="button"
+            <button type="button"
               class="group relative flex w-full justify-center rounded-md border border-gray-100 bg-white py-2 px-4 text-sm font-medium shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
-              @click="navigateTo('/register')"
-            >
+              @click="navigateTo('/register')">
               <span class="text-slate-500 group-hover:text-slate-600">使用電子信箱註冊</span>
             </button>
           </div>
@@ -71,7 +54,10 @@
 </template>
 
 <script setup>
+import { useUserStore } from '@/stores/user'
+
 const { push: pushNotify } = useNotification()
+const userStore = useUserStore()
 
 const loginData = reactive({
   email: '',
@@ -79,11 +65,7 @@ const loginData = reactive({
 })
 
 const handleEmailLogin = async () => {
-  const { data, error } = await useFetch('/api/auth/login', {
-    method: 'POST',
-    body: toRaw(loginData),
-    initialCache: false
-  })
+  const { data, error } = await userStore.emailLogin(toRaw(loginData))
 
   if (data.value) {
     pushNotify('success', '登入成功', '請等待頁面自動跳轉')
@@ -92,4 +74,8 @@ const handleEmailLogin = async () => {
     pushNotify('error', '登入失敗', error.value?.data?.message ?? '未知錯誤')
   }
 }
+
+definePageMeta({
+  layout: false
+})
 </script>

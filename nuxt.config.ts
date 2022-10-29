@@ -4,6 +4,9 @@ export default defineNuxtConfig({
   typescript: {
     typeCheck: true
   },
+  build: {
+    transpile: ['@headlessui/vue']
+  },
   runtimeConfig: {
     jwtSignSecret: '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',
   }
